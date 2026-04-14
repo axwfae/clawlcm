@@ -1,0 +1,73 @@
+{
+  "session_metadata": {
+    "id": "clawlcm-dev-v060",
+    "name": "clawlcm Development v0.6.0",
+    "created": "2026-04-14",
+    "project_path": "/home/ubuntu/workspace/clawlcm",
+    "version": "v0.6.0",
+    "binary_size": "16MB",
+    "description": "基于 lossless-claw v0.9.0 移植的功能开发会话"
+  },
+  "files_to_restore": [
+    {
+      "path": "/home/ubuntu/workspace/clawlcm/VERSION",
+      "content": "v0.6.0"
+    },
+    {
+      "path": "/home/ubuntu/workspace/clawlcm/db/connection.go",
+      "content": "package db\n\nimport (\n\t\"fmt\"\n\n\t\"github.com/glebarez/sqlite\"\n\t\"gorm.io/gorm\"\n\t\"gorm.io/gorm/logger\"\n)\n\ntype Database struct {\n\t*gorm.DB\n}\n\nfunc NewDatabase(path string, verbose bool) (*Database, error) {\n\tconfig := &gorm.Config{\n\t\tLogger: logger.Default.LogMode(logger.Silent),\n\t}\n\tif verbose {\n\t\tconfig.Logger = logger.Default.LogMode(logger.Info)\n\t}\n\n\tdb, err := gorm.Open(sqlite.Open(path), config)\n\tif err != nil {\n\t\treturn nil, fmt.Errorf(\"failed to open database: %w\", err)\n\t}\n\n\tsqlDB, err := db.DB()\n\tif err != nil {\n\t\treturn nil, fmt.Errorf(\"failed to get underlying sql.DB: %w\", err)\n\t}\n\n\tsqlDB.Exec(\"PRAGMA journal_mode=WAL\")\n\tsqlDB.Exec(\"PRAGMA synchronous=NORMAL\")\n\tsqlDB.Exec(\"PRAGMA foreign_keys=ON\")\n\tsqlDB.Exec(\"PRAGMA busy_timeout=30000\")\n\n\treturn &Database{db}, nil\n}\n\nfunc (d *Database) Close() error {\n\tsqlDB, err := d.DB.DB()\n\tif err != nil {\n\t\treturn err\n\t}\n\treturn sqlDB.Close()\n}"
+    },
+    {
+      "path": "/home/ubuntu/workspace/clawlcm/data/config.json",
+      "content": "{\n  \"database\": {\n    \"path\": \"./data/clawlcm.db\"\n  },\n  \"llm\": {\n    \"model\": \"\",\n    \"provider\": \"openai\",\n    \"apiKey\": \"\",\n    \"baseURL\": \"\",\n    \"timeoutMs\": 120000\n  },\n  \"context\": {\n    \"threshold\": 0.75,\n    \"freshTailCount\": 8,\n    \"useCJKTokenizer\": true,\n    \"condensedMinFanout\": 4,\n    \"incrementalMaxDepth\": 1,\n    \"proactiveThresholdCompactionMode\": \"deferred\",\n    \"maintenanceDebtEnabled\": true,\n    \"maintenanceDebtThreshold\": 50000,\n    \"largeFilesDir\": \"./data/large_files\",\n    \"cacheAwareCompaction\": false\n  },\n  \"session\": {\n    \"ignoreSessionPatterns\": null,\n    \"statelessSessionPatterns\": null,\n    \"skipStatelessSessions\": false\n  },\n  \"enabled\": true,\n  \"verbose\": false\n}"
+    },
+    {
+      "path": "/home/ubuntu/workspace/clawlcm/engine.go",
+      "description": "核心引擎 - 完整实现 (需要从源代码同步)"
+    },
+    {
+      "path": "/home/ubuntu/workspace/clawlcm/types/types.go",
+      "description": "类型定义 - 完整实现 (需要从源代码同步)"
+    },
+    {
+      "path": "/home/ubuntu/workspace/clawlcm/store/store.go",
+      "description": "存储层 - 完整实现 (需要从源代码同步)"
+    },
+    {
+      "path": "/home/ubuntu/workspace/clawlcm/cmd/clawlcm/main.go",
+      "description": "CLI 入口 - 完整实现 (需要从源代码同步)"
+    }
+  ],
+  "implemented_features": [
+    {
+      "name": "Deferred Proactive Compaction",
+      "source": "lossless-claw v0.9.0 PR #408",
+      "status": "implemented"
+    },
+    {
+      "name": "Maintenance Debt Tracking",
+      "source": "lossless-claw v0.9.0 PR #408",
+      "status": "implemented"
+    },
+    {
+      "name": "largeFilesDir Configuration",
+      "source": "lossless-claw v0.9.0 PR #355",
+      "status": "implemented"
+    },
+    {
+      "name": "rotate Command",
+      "source": "lossless-claw v0.9.0 PR #395",
+      "status": "implemented"
+    },
+    {
+      "name": "SQLite busy_timeout 30s",
+      "source": "lossless-claw v0.9.0 PR #413",
+      "status": "implemented"
+    }
+  ],
+  "build_command": "cd /home/ubuntu/workspace/clawlcm && /usr/local/go/bin/go build -o clawlcm ./cmd/clawlcm",
+  "test_commands": [
+    "./clawlcm --help",
+    "./clawlcm maintain --maint-op rotate --session-key <session-key>"
+  ]
+}
