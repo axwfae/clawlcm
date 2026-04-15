@@ -1,19 +1,37 @@
 # clawlcm - 無損上下文管理
 
-clawlcm 是基於 picolcm 的無損上下文管理系統，旨在逐步對比並追上 [lossless-claw](https://github.com/Martian-Engineering/lossless-claw) 的功能。
+clawlcm 是基於 lossless-claw v0.9.1 + lossless-claw-enhanced 移植的無損上下文管理系統。
+
+> **版本**: v0.8.1 | **更新日**: 2026-04-15 | **移植工具**: OpenCode + Oh-My-OpenAgent + MiniMax M2.5
+
+---
 
 ## 專案資訊
 
 | 項目 | 值 |
 |------|------|
 | 專案名稱 | clawlcm |
-| 基於 | picolcm |
-| 原始專案 | [lossless-claw](https://github.com/Martian-Engineering/lossless-claw) |
+| 基於 | lossless-claw v0.9.1 + lossless-claw-enhanced |
+| 原始專案 | lossless-claw |
 | 當前版本 | **v0.8.1** |
+
+---
+
+## 移植說明
+
+本專案使用以下工具移植：
+
+- **OpenCode** - AI 開發環境
+- **Oh-My-OpenAgent** - AI Agent 編排框架
+- **MiniMax M2.5** - LLM 模型
+
+---
 
 ## 概述
 
 LCM (Lossless Context Management) 是一個專為大型語言模型 (LLM) 應用設計的無損上下文管理系統。當對話超過模型的上下文窗口時，傳統方法會截斷舊訊息。LCM 採用 DAG 結構的摘要系統，保留每條訊息，同時將活躍上下文保持在模型的 token 限制內。
+
+---
 
 ## 核心功能
 
@@ -32,6 +50,13 @@ LCM (Lossless Context Management) 是一個專為大型語言模型 (LLM) 應用
 | 完整維護工具 | gc/vacuum/backup/doctor/clean/rotate | ✅ |
 | Agent Tools | lcm_grep/lcm_describe/lcm_expand | ✅ |
 | Expand Query | 基於查詢的 DAG 擴展 | ✅ |
+| CJK Token 估算 | 1.5x CJK, 2x Emoji | ✅ |
+| Auth Error 過濾 | 防止 false-positive 錯誤 | ✅ |
+| Session Rotation | 對話分割檢測 | ✅ |
+| 空訊息跳過 | 跳過 empty assistant | ✅ |
+| CLI --flags 修復 | 支援 command --flags 格式 | ✅ |
+
+---
 
 ## 技術規格
 
@@ -41,6 +66,8 @@ LCM (Lossless Context Management) 是一個專為大型語言模型 (LLM) 應用
 | 依賴 | SQLite + GORM |
 | 編譯大小 | ~15 MB |
 | 語言 | Go 1.22+ |
+
+---
 
 ## 快速開始
 
@@ -80,6 +107,8 @@ make build
 ./clawlcm --session-key "user:chat:1" compact --force
 ```
 
+---
+
 ## 配置
 
 配置文件 `./data/config.json`：
@@ -90,10 +119,10 @@ make build
     "path": "./data/clawlcm.db"
   },
   "llm": {
-    "model": "minimax_m2.5",
+    "model": "",
     "provider": "openai",
-    "apiKey": "your-api-key",
-    "baseURL": "http://your-llm-server:PORT",
+    "apiKey": "",
+    "baseURL": "",
     "timeoutMs": 120000
   },
   "context": {
@@ -117,7 +146,9 @@ make build
 ```
 
 > ⚠️ **注意**: `baseURL` 不要包含 `/v1` 结尾
-> **v0.6.0 新增**: `proactiveThresholdCompactionMode`, `maintenanceDebtEnabled`, `largeFilesDir` 等配置项
+> **安全提示**: 敏感信息 (apiKey, baseURL) 請使用環境變量或命令行參數，不要提交到版本控制
+
+---
 
 ## 專案結構
 
@@ -133,50 +164,63 @@ clawlcm/
 ├── types/            # 類型定義
 ├── logger/           # 日誌
 ├── docker/           # Docker 配置
-├── FEATURE_DIFF.md   # 功能差異報告
-└── Makefile          # 構建腳本
+├── Makefile          # 構建腳本
+└── README.md        # 本文件
 ```
 
-## 功能差異
+---
 
-詳細功能對比請參考 [FEATURE_DIFF.md](./FEATURE_DIFF.md)。
+## CLI 命令
 
-### 已移植功能 (v0.8.0)
+| 命令 | 說明 |
+|------|------|
+| `bootstrap` | 初始化對話 |
+| `ingest` | 添加訊息 |
+| `assemble` | 組裝上下文 |
+| `compact` | 觸發壓縮 |
+| `grep` | BM25 檢索 |
+| `describe` | 描述摘要 |
+| `expand` | 展開摘要 |
+| `maintain --op` | 維護操作 (gc/vacuum/backup/doctor/clean/rotate) |
+| `tui` | ⚠️ 空實現 (不推薦) |
 
-1. ✅ **Deferred 壓縮**: proactiveThresholdCompactionMode
-2. ✅ **維護債務**: maintenanceDebt 追蹤
-3. ✅ **大文件外置**: largeFilesDir
-4. ✅ **rotate 命令**: 對話分割重寫
-5. ✅ **Session 過濾**: ignore/stateless patterns
-6. ✅ **Agent Tools**: lcm_grep, lcm_describe, lcm_expand
-7. ✅ **Expand Query**: 基於查詢的 DAG 擴展，支持 summary_ids 和 query 兩種模式
-8. ✅ **Condensed 摘要**: 多 Leaf 凝聚邏輯 (v0.8.1)
-9. ✅ **CJK Token**: 修正 CJK/Emoji 估算公式 (v0.8.1)
-10. ✅ **Auth Error 過濾**: 防止 false-positive 錯誤 (v0.8.1)
-11. ✅ **空訊息過濾**: 跳過 empty assistant 訊息 (v0.8.1)
-12. ✅ **CLI 修復**: 支援 command --flags 格式 (v0.8.1)
+---
 
-### 不建議實作
+## 不建議實作
 
 1. **TUI (交互式終端界面)**
 
    - **原因**: 
-   - CLI 已有完整命令支援 (bootstrap/ingest/assemble/compact/grep/describe/expand/maintain)
+   - CLI 已有完整命令支援
    - 目標是作為 OpenClaw 插件運行，非獨立 TUI 用途
-   - 可透過 OpenClaw 的 TUI 介面使用
 
 2. **FTS5 (SQLite 全文搜索)**
 
    - **原因**:
-   - 已有 BM25 檢索功能 (retrieval/bm25.go)
-   - FTS5 會增加 SQLite 依賴和複雜度
-   - BM25 對向量搜索場景已足夠
-   - 建議使用外部檢索方案 (如向量資料庫) 進行進階搜索
+   - 已有 BM25 檢索功能
+   - FTS5 會增加複雜度
+   - 建議使用外部檢索方案
+
+---
+
+## 版本歷史
+
+| 版本 | 日期 | 變更 |
+|------|------|------|
+| v0.8.1 | 2026-04-15 | 增強版發布 (CJK Token, Auth Error, Session Rotation, 空訊息, CLI --flags) |
+| v0.8.0 | 2026-04-14 | 移植 lossless-claw 功能 (Deferred, Maintenance Debt, LargeFiles, Rotate, etc.) |
+
+---
 
 ## 參考
 
 - [lossless-claw](https://github.com/Martian-Engineering/lossless-claw) - 原始項目
+- [lossless-claw-enhanced](https://github.com/win4r/lossless-claw-enhanced) - 增強版本
 - [LCM Paper](https://papers.voltropy.com/LCM) - 技術論文
+- [OpenCode](https://opencode.com) - AI 開發環境
+- [Oh-My-OpenAgent](https://github.com/oh-my-openagent) - AI Agent 編排框架
+
+---
 
 ## 授權
 
