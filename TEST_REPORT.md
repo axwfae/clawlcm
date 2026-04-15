@@ -4,7 +4,7 @@
 
 測試日期: 2026-04-15
 測試環境: Ubuntu / Go 1.22
-LLM 服務器: http://192.168.123.200:18869 (minimax_m2.5)
+LLM 服務器: http://xx.xx.x.x:18869 (minimax_m2.5)
 
 ================================================================================
                          一、測試項目與結果
@@ -32,11 +32,11 @@ LLM 服務器: http://192.168.123.200:18869 (minimax_m2.5)
 
 【修改的檔案】
 
-1. /home/ubuntu/workspace/clawlcm_backup/engine_test.go
+1. workspace/clawlcm_backup/engine_test.go
    - 狀態: 已刪除
    - 原因: 與 clawlcm_backup 套件產生 import cycle 衝突
 
-2. /home/ubuntu/workspace/test_clawlcm/main.go
+2. workspace/test_clawlcm/main.go
    - 狀態: 新建立
    - 目的: 作為獨立測試程式測試 clawlcm 功能
 
@@ -55,7 +55,7 @@ LLM 服務器: http://192.168.123.200:18869 (minimax_m2.5)
 答案: 不需要
 
 理由:
-- 原始程式 /home/ubuntu/workspace/clawlcm/clawlcm/ 保留 engine_test.go
+- 原始程式 workspace/clawlcm/clawlcm/ 保留 engine_test.go
 - 這是正常 Go 測試檔案，位於相同套件中不會造成問題
 - 備份目錄刪除是因為測試程式需要 import clawlcm 套件
 
