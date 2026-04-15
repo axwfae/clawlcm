@@ -1,0 +1,19 @@
+{
+  "database": {
+    "path": "./data/picolcm.db"
+  },
+  "llm": {
+    "model": "",
+    "provider": "openai",
+    "apiKey": "",
+    "baseURL": "",
+    "timeoutMs": 120000
+  },
+  "context": {
+    "threshold": 0.75,
+    "freshTailCount": 8,
+    "useCJKTokenizer": true
+  },
+  "enabled": true,
+  "verbose": false
+}
