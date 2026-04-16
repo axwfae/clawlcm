@@ -2,7 +2,7 @@
 
 clawlcm 是基於 lossless-claw v0.9.1 + lossless-claw-enhanced 移植的無損上下文管理系統。
 
-> **版本**: v0.8.4 | **更新日**: 2026-04-16 | **移植工具**: OpenCode + Oh-My-OpenAgent + MiniMax M2.5
+> **版本**: v0.8.7 | **更新日**: 2026-04-16 | **移植工具**: OpenCode + Oh-My-OpenAgent + MiniMax M2.5
 
 ---
 
@@ -227,6 +227,9 @@ clawlcm --help  # 數據會寫入 /path/to/clawlcm/data/
 
 | 版本 | 日期 | 變更 |
 |------|------|------|
+| v0.8.7 | 2026-04-16 | 修復 grep -mode 參數解析問題 |
+| v0.8.6 | 2026-04-16 | 實現正規表達式搜索 (regex)、修復無用變量 |
+| v0.8.5 | 2026-04-16 | 修復 maintain 偽完成代碼 (backup/vacuum/clean 真實執行) |
 | v0.8.4 | 2026-04-16 | 統一文檔一致性，移除 ./ 前綴 |
 | v0.8.3 | 2026-04-16 | 自包含路徑 + 修復 largeFilesDir + 符號連結支援 |
 | v0.8.2 | 2026-04-16 | CLI 修復 (describe/expand/maintain 參數) |
