@@ -1,0 +1,32 @@
+{
+  "database": {
+    "path": "./data/clawlcm.db"
+  },
+  "llm": {
+    "model": "",
+    "provider": "openai",
+    "apiKey": "",
+    "baseURL": "",
+    "timeoutMs": 120000
+  },
+  "context": {
+    "threshold": 0.75,
+    "freshTailCount": 8,
+    "useCJKTokenizer": true,
+    "condensedMinFanout": 4,
+    "incrementalMaxDepth": 1,
+    "proactiveThresholdCompactionMode": "deferred",
+    "maintenanceDebtEnabled": true,
+    "maintenanceDebtThreshold": 50000,
+    "largeFilesDir": "./data/large_files",
+    "cacheAwareCompaction": false,
+    "leafChunkTokens": 20000
+  },
+  "session": {
+    "ignoreSessionPatterns": [],
+    "statelessSessionPatterns": [],
+    "skipStatelessSessions": false
+  },
+  "enabled": true,
+  "verbose": false
+}
