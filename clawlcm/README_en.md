@@ -2,7 +2,7 @@
 
 clawlcm is a lossless context management system based on lossless-claw v0.9.1 + lossless-claw-enhanced.
 
-> **Version**: v0.8.4 | **Updated**: 2026-04-16 | **Porting Tools**: OpenCode + Oh-My-OpenAgent + MiniMax M2.5
+> **Version**: v0.8.7 | **Updated**: 2026-04-16 | **Porting Tools**: OpenCode + Oh-My-OpenAgent + MiniMax M2.5
 
 ---
 
@@ -209,6 +209,9 @@ clawlcm --help  # Data will be in /path/to/clawlcm/data/
 
 | Version | Date | Changes |
 |---------|------|--------|
+| v0.8.7 | 2026-04-16 | Fix grep -mode parameter parsing |
+| v0.8.6 | 2026-04-16 | Implement regex search, fix unused variables |
+| v0.8.5 | 2026-04-16 | Fix maintain stub code (backup/vacuum/clean now actually execute) |
 | v0.8.4 | 2026-04-16 | Unified documentation consistency, remove ./ prefix |
 | v0.8.3 | 2026-04-16 | Self-contained paths + fix largeFilesDir + symlink support |
 | v0.8.2 | 2026-04-16 | CLI Fix (describe/expand/maintain params) |
