@@ -1,7 +1,7 @@
 ---
 name: clawlcm
 description: Lossless Context Management - LLM-driven summarization, BM25 retrieval, DAG compression, CJK support. Based on lossless-claw-enhanced.
-metadata: {nanobot:{emoji:🧠,requires:{bins:[clawlcm]},install:[{id:manual,kind:binary,label:Copy clawlcm binary to skill bin directory}],version:"v0.8.9"}}
+metadata: {"nanobot":{"emoji":"🧠","requires":{"bins":["clawlcm"]},"install":[{"id":"manual","kind":"binary","label":"Copy clawlcm binary to skill bin directory"}],"version":"v0.8.9"}}
 ---
 
 # clawlcm Skill
